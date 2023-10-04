@@ -1,0 +1,45 @@
+<queries>
+    <query name="net.cdolinc.staff.employment.records" flattened="true">
+        <summary>CDOL: Employment Records</summary>
+        <description>List all Employment Records</description>
+        <args>
+            <arg name="selectedUserDcid" description="Passed in User Dcid" default="0"/>
+        </args>
+        <columns>
+            <column column="u_cdol_user_employment.id">id</column>
+            <column column="u_cdol_user_employment.usersdcid">usersdcid</column>
+            <column column="u_cdol_user_employment.schoolid">schoolid</column>
+            <column column="u_cdol_user_employment.school_name">schooolname</column>
+            <column column="u_cdol_user_employment.assignment">assignment</column>
+            <column column="u_cdol_user_employment.emp_start_date">emp_start_date</column>
+            <column column="u_cdol_user_employment.emp_end_date">emp_end_date</column>
+            <column column="u_cdol_user_employment.epm_fte">epm_fte</column>
+            <column column="u_cdol_user_employment.notes">notes</column>
+        </columns>
+        <sql>
+            <![CDATA[
+				SELECT
+					u_cdol_user_employment.id,
+					u_cdol_user_employment.usersdcid,
+					u_cdol_user_employment.schoolid,
+					CASE
+						WHEN u_cdol_user_employment.schoolid = 0 THEN 'Diocean Office'
+						WHEN u_cdol_user_employment.schoolid = -1 THEN u_cdol_user_employment.school_name
+						ELSE schools.name
+					END AS schooolname,
+					u_cdol_user_employment.assignment,
+					u_cdol_user_employment.emp_start_date,
+					u_cdol_user_employment.emp_end_date,
+					u_cdol_user_employment.epm_fte,
+					u_cdol_user_employment.notes
+				FROM
+					u_cdol_user_employment
+					LEFT JOIN schools ON schools.school_number = u_cdol_user_employment.schoolid
+				WHERE
+					u_cdol_user_employment.usersdcid = :selectedUserDcid
+					OR :selectedUserDcid = 0
+			]]>
+        </sql>
+    </query>
+
+</queries>

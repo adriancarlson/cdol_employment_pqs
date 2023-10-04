@@ -1,0 +1,14 @@
+<permission_mappings>
+	<permission name="/admin/faculty/cdol_employment.html">
+		<implies allow="post">/ws/schema/query/net.cdolinc.staff.employment.records</implies>
+	</permission>
+
+	<permission name='/admin/faculty/cdol_employment.html'>
+		<implies allow="post">/ws/schema/table/u_cdol_user_employment</implies>
+		<implies allow="put">/ws/schema/table/u_cdol_user_employment/#</implies>
+		<implies allow="delete">/ws/schema/table/u_cdol_user_employment/#</implies>
+		<implies allow="get">/ws/schema/table/u_cdol_user_employment/#</implies>
+		<implies allow="get">/ws/schema/table/u_cdol_user_employment/count</implies>
+		<implies allow="get">/ws/schema/table/u_cdol_user_employment</implies>
+	</permission>
+</permission_mappings>
