@@ -1,6 +1,6 @@
 <permission_mappings>
 	<permission name="/admin/faculty/cdol_employment.html">
-		<implies allow="post">/ws/schema/query/net.cdolinc.staff.employment.records</implies>
+		<implies allow="post">/ws/schema/query/net.cdolinc.user.employment.employmentList</implies>
 	</permission>
 
 	<permission name='/admin/faculty/cdol_employment.html'>

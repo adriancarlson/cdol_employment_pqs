@@ -1,5 +1,5 @@
 <queries>
-    <query name="net.cdolinc.staff.employment.records" flattened="true">
+    <query name="net.cdolinc.user.employment.employmentList" flattened="true">
         <summary>CDOL: Employment Records</summary>
         <description>List all Employment Records</description>
         <args>
@@ -9,7 +9,7 @@
             <column column="u_cdol_user_employment.id">id</column>
             <column column="u_cdol_user_employment.usersdcid">usersdcid</column>
             <column column="u_cdol_user_employment.schoolid">schoolid</column>
-            <column column="u_cdol_user_employment.school_name">schooolname</column>
+            <column column="u_cdol_user_employment.school_name">schoolname</column>
             <column column="u_cdol_user_employment.assignment">assignment</column>
             <column column="u_cdol_user_employment.emp_start_date">emp_start_date</column>
             <column column="u_cdol_user_employment.emp_end_date">emp_end_date</column>
@@ -26,7 +26,7 @@
 						WHEN u_cdol_user_employment.schoolid = 0 THEN 'Diocean Office'
 						WHEN u_cdol_user_employment.schoolid = -1 THEN u_cdol_user_employment.school_name
 						ELSE schools.name
-					END AS schooolname,
+					END AS schoolname,
 					u_cdol_user_employment.assignment,
 					u_cdol_user_employment.emp_start_date,
 					u_cdol_user_employment.emp_end_date,
