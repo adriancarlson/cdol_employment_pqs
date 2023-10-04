@@ -72,17 +72,72 @@
         </columns>
         <sql>
             <![CDATA[
+                WITH max_record AS (
+                    SELECT
+                        u_cdol_user_employment.id,
+                        u_cdol_user_employment.emp_start_date,
+                        u_cdol_user_employment.emp_end_date
+                    FROM
+                        u_cdol_user_employment
+                    WHERE
+                        (
+                            u_cdol_user_employment.usersdcid = :selectedUserDcid
+                            OR :selectedUserDcid = 0
+                        )
+                        AND u_cdol_user_employment.emp_start_date = (
+                            SELECT
+                                MAX(emp_start_date)
+                            FROM
+                                u_cdol_user_employment
+                            WHERE
+                                usersdcid = :selectedUserDcid
+                        )
+                ),
+                min_record AS (
+                    SELECT
+                        u_cdol_user_employment.id,
+                        u_cdol_user_employment.emp_start_date,
+                        u_cdol_user_employment.emp_end_date
+                    FROM
+                        u_cdol_user_employment
+                    WHERE
+                        (
+                            u_cdol_user_employment.usersdcid = :selectedUserDcid
+                            OR :selectedUserDcid = 0
+                        )
+                        AND u_cdol_user_employment.emp_start_date = (
+                            SELECT
+                                MIN(emp_start_date)
+                            FROM
+                                u_cdol_user_employment
+                            WHERE
+                                usersdcid = :selectedUserDcid
+                        )
+                ),
+                max_dates AS (
+                    SELECT
+                        NVL(max_record.emp_end_date, SYSDATE) AS max_end_date,
+                        min_record.emp_start_date AS min_start_date
+                    FROM
+                        max_record,
+                        min_record
+                )
                 SELECT
-                    NVL(MAX(emp_end_date), SYSDATE) AS max_end_date,
-                    MIN(emp_start_date) AS min_start_date,
-                    TRUNC(MONTHS_BETWEEN(MAX(emp_end_date), MIN(emp_start_date)) / 12) AS total_years,
-                    MOD(MONTHS_BETWEEN(MAX(emp_end_date), MIN(emp_start_date)), 12) AS total_months
+                    max_dates.max_end_date,
+                    max_dates.min_start_date,
+                    FLOOR(
+                        TRUNC(
+                            MONTHS_BETWEEN(max_dates.max_end_date, max_dates.min_start_date) / 12
+                        )
+                    ) AS total_years,
+                    FLOOR(
+                        MOD(
+                            MONTHS_BETWEEN(max_dates.max_end_date, max_dates.min_start_date),
+                            12
+                        )
+                    ) AS total_months
                 FROM
-                    u_cdol_user_employment
-                WHERE
-                    (usersdcid = :selectedUserDcid OR :selectedUserDcid = 0)
-                GROUP BY
-                    usersdcid
+                    max_dates
 			]]>
         </sql>
     </query>
