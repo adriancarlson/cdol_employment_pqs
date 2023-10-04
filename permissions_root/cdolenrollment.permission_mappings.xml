@@ -2,7 +2,6 @@
 	<permission name="/admin/faculty/cdol_employment.html">
 		<implies allow="post">/ws/schema/query/net.cdolinc.user.employment.employmentList</implies>
 	</permission>
-
 	<permission name='/admin/faculty/cdol_employment.html'>
 		<implies allow="post">/ws/schema/table/u_cdol_user_employment</implies>
 		<implies allow="put">/ws/schema/table/u_cdol_user_employment/#</implies>

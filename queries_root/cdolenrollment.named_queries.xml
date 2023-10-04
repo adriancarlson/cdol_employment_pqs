@@ -13,6 +13,8 @@
             <column column="u_cdol_user_employment.assignment">assignment</column>
             <column column="u_cdol_user_employment.emp_start_date">emp_start_date</column>
             <column column="u_cdol_user_employment.emp_end_date">emp_end_date</column>
+            <column column="u_cdol_user_employment.emp_end_date">emp_years</column>
+            <column column="u_cdol_user_employment.emp_end_date">emp_months</column>
             <column column="u_cdol_user_employment.epm_fte">epm_fte</column>
             <column column="u_cdol_user_employment.notes">notes</column>
         </columns>
@@ -30,6 +32,21 @@
 					u_cdol_user_employment.assignment,
 					u_cdol_user_employment.emp_start_date,
 					u_cdol_user_employment.emp_end_date,
+                    FLOOR(
+                            MONTHS_BETWEEN(
+                                u_cdol_user_employment.emp_end_date,
+                                u_cdol_user_employment.emp_start_date
+                            ) / 12
+                        ) AS emp_years,
+                    FLOOR(
+                            MOD(
+                            MONTHS_BETWEEN(
+                                u_cdol_user_employment.emp_end_date,
+                                u_cdol_user_employment.emp_start_date
+                            ),
+                            12
+                            )
+                    ) AS emp_months,
 					u_cdol_user_employment.epm_fte,
 					u_cdol_user_employment.notes
 				FROM
