@@ -34,14 +34,14 @@
 					u_cdol_user_employment.emp_end_date,
                     FLOOR(
                             MONTHS_BETWEEN(
-                                u_cdol_user_employment.emp_end_date,
+                                NVL(u_cdol_user_employment.emp_end_date, SYSDATE),
                                 u_cdol_user_employment.emp_start_date
                             ) / 12
                         ) AS emp_years,
                     FLOOR(
                             MOD(
                             MONTHS_BETWEEN(
-                                u_cdol_user_employment.emp_end_date,
+                                NVL(u_cdol_user_employment.emp_end_date, SYSDATE),
                                 u_cdol_user_employment.emp_start_date
                             ),
                             12
@@ -58,5 +58,32 @@
 			]]>
         </sql>
     </query>
-
+    <query name="net.cdolinc.user.employment.totalTime" flattened="true">
+        <summary>CDOL: Employment Time</summary>
+        <description>Total Years and Months of Employment</description>
+        <args>
+            <arg name="selectedUserDcid" description="Passed in User Dcid" required="true" default="0"/>
+        </args>
+        <columns>
+            <column column="u_cdol_user_employment.emp_end_date">max_end_date</column>
+            <column column="u_cdol_user_employment.emp_start_date">min_start_date</column>
+            <column column="u_cdol_user_employment.emp_end_date">total_years</column>
+            <column column="u_cdol_user_employment.emp_end_date">total_months</column>
+        </columns>
+        <sql>
+            <![CDATA[
+                SELECT
+                    NVL(MAX(emp_end_date), SYSDATE) AS max_end_date,
+                    MIN(emp_start_date) AS min_start_date,
+                    TRUNC(MONTHS_BETWEEN(MAX(emp_end_date), MIN(emp_start_date)) / 12) AS total_years,
+                    MOD(MONTHS_BETWEEN(MAX(emp_end_date), MIN(emp_start_date)), 12) AS total_months
+                FROM
+                    u_cdol_user_employment
+                WHERE
+                    (usersdcid = :selectedUserDcid OR :selectedUserDcid = 0)
+                GROUP BY
+                    usersdcid
+			]]>
+        </sql>
+    </query>
 </queries>
