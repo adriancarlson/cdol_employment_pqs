@@ -10,5 +10,6 @@
 		<implies allow="get">/ws/schema/table/u_cdol_user_employment/#</implies>
 		<implies allow="get">/ws/schema/table/u_cdol_user_employment/count</implies>
 		<implies allow="get">/ws/schema/table/u_cdol_user_employment</implies>
+		<implies allow="get">/ws/v1/district/school</implies>
 	</permission>
 </permission_mappings>
