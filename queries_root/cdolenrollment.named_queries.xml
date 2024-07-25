@@ -1,25 +1,24 @@
 <queries>
-    <query name="net.cdolinc.user.employment.employmentList" flattened="true">
-        <summary>CDOL: Employment Records</summary>
-        <description>List all Employment Records</description>
-        <args>
-            <arg name="selectedUserDcid" description="Passed in User Dcid" default="0"/>
-        </args>
-        <columns>
-            <column column="u_cdol_user_employment.id">id</column>
-            <column column="u_cdol_user_employment.usersdcid">usersdcid</column>
-            <column column="u_cdol_user_employment.schoolid">schoolid</column>
-            <column column="u_cdol_user_employment.school_name">school_name</column>
-            <column column="u_cdol_user_employment.assignment">assignment</column>
-            <column column="u_cdol_user_employment.emp_start_date">emp_start_date</column>
-            <column column="u_cdol_user_employment.emp_end_date">emp_end_date</column>
-            <column column="u_cdol_user_employment.emp_end_date">emp_years</column>
-            <column column="u_cdol_user_employment.emp_end_date">emp_months</column>
-            <column column="u_cdol_user_employment.epm_fte">epm_fte</column>
-            <column column="u_cdol_user_employment.notes">notes</column>
-        </columns>
-        <sql>
-            <![CDATA[
+	<query name="net.cdolinc.user.employment.employmentList" flattened="true">
+		<summary>CDOL: Employment Records</summary>
+		<description>List all Employment Records</description>
+		<args>
+			<arg name="selectedUserDcid" description="Passed in User Dcid" default="0"/>
+		</args>
+		<columns>
+			<column column="u_cdol_user_employment.id">id</column>
+			<column column="u_cdol_user_employment.usersdcid">usersdcid</column>
+			<column column="u_cdol_user_employment.schoolid">schoolid</column>
+			<column column="u_cdol_user_employment.school_name">school_name</column>
+			<column column="u_cdol_user_employment.assignment">assignment</column>
+			<column column="u_cdol_user_employment.emp_start_date">emp_start_date</column>
+			<column column="u_cdol_user_employment.emp_end_date">emp_end_date</column>
+			<column column="u_cdol_user_employment.emp_end_date">emp_years</column>
+			<column column="u_cdol_user_employment.emp_end_date">emp_months</column>
+			<column column="u_cdol_user_employment.notes">notes</column>
+		</columns>
+		<sql>
+			<![CDATA[
 				SELECT
 					u_cdol_user_employment.id,
 					u_cdol_user_employment.usersdcid,
@@ -47,7 +46,6 @@
                             12
                             )
                     ) AS emp_months,
-					u_cdol_user_employment.epm_fte,
 					u_cdol_user_employment.notes
 				FROM
 					u_cdol_user_employment
@@ -56,89 +54,57 @@
 					u_cdol_user_employment.usersdcid = :selectedUserDcid
 					OR :selectedUserDcid = 0
 			]]>
-        </sql>
-    </query>
-    <query name="net.cdolinc.user.employment.totalTime" flattened="true">
-        <summary>CDOL: Employment Time</summary>
-        <description>Total Years and Months of Employment</description>
-        <args>
-            <arg name="selectedUserDcid" description="Passed in User Dcid" required="true" default="0"/>
-        </args>
-        <columns>
-            <column column="u_cdol_user_employment.emp_end_date">max_end_date</column>
-            <column column="u_cdol_user_employment.emp_start_date">min_start_date</column>
-            <column column="u_cdol_user_employment.emp_end_date">total_years</column>
-            <column column="u_cdol_user_employment.emp_end_date">total_months</column>
-        </columns>
-        <sql>
-            <![CDATA[
-                WITH max_record AS (
-                    SELECT
-                        u_cdol_user_employment.id,
-                        u_cdol_user_employment.emp_start_date,
-                        u_cdol_user_employment.emp_end_date
-                    FROM
-                        u_cdol_user_employment
-                    WHERE
-                        (
-                            u_cdol_user_employment.usersdcid = :selectedUserDcid
-                            OR :selectedUserDcid = 0
-                        )
-                        AND u_cdol_user_employment.emp_start_date = (
-                            SELECT
-                                MAX(emp_start_date)
-                            FROM
-                                u_cdol_user_employment
-                            WHERE
-                                usersdcid = :selectedUserDcid
-                        )
-                ),
-                min_record AS (
-                    SELECT
-                        u_cdol_user_employment.id,
-                        u_cdol_user_employment.emp_start_date,
-                        u_cdol_user_employment.emp_end_date
-                    FROM
-                        u_cdol_user_employment
-                    WHERE
-                        (
-                            u_cdol_user_employment.usersdcid = :selectedUserDcid
-                            OR :selectedUserDcid = 0
-                        )
-                        AND u_cdol_user_employment.emp_start_date = (
-                            SELECT
-                                MIN(emp_start_date)
-                            FROM
-                                u_cdol_user_employment
-                            WHERE
-                                usersdcid = :selectedUserDcid
-                        )
-                ),
-                max_dates AS (
-                    SELECT
-                        NVL(max_record.emp_end_date, SYSDATE) AS max_end_date,
-                        min_record.emp_start_date AS min_start_date
-                    FROM
-                        max_record,
-                        min_record
-                )
-                SELECT
-                    max_dates.max_end_date,
-                    max_dates.min_start_date,
-                    FLOOR(
-                        TRUNC(
-                            MONTHS_BETWEEN(max_dates.max_end_date, max_dates.min_start_date) / 12
-                        )
-                    ) AS total_years,
-                    FLOOR(
-                        MOD(
-                            MONTHS_BETWEEN(max_dates.max_end_date, max_dates.min_start_date),
-                            12
-                        )
-                    ) AS total_months
-                FROM
-                    max_dates
+		</sql>
+	</query>
+	<query name="net.cdolinc.user.employment.totalTime" flattened="true">
+		<summary>CDOL: Employment Time</summary>
+		<description>Total Years and Months of Employment</description>
+		<args>
+			<arg name="selectedUserDcid" description="Passed in User Dcid" required="true" default="0"/>
+		</args>
+		<columns>
+			<column column="u_cdol_user_employment.emp_end_date">total_years</column>
+			<column column="u_cdol_user_employment.emp_end_date">total_months</column>
+		</columns>
+		<sql>
+			<![CDATA[
+				WITH emp_data AS (
+				    SELECT
+				        FLOOR(
+				            MONTHS_BETWEEN(
+				                NVL(u_cdol_user_employment.emp_end_date, SYSDATE),
+				                u_cdol_user_employment.emp_start_date
+				            ) / 12
+				        ) AS emp_years,
+				        FLOOR(
+				            MOD(
+				                MONTHS_BETWEEN(
+				                    NVL(u_cdol_user_employment.emp_end_date, SYSDATE),
+				                    u_cdol_user_employment.emp_start_date
+				                ),
+				                12
+				            )
+				        ) AS emp_months
+				    FROM
+				        u_cdol_user_employment
+				        LEFT JOIN schools ON schools.school_number = u_cdol_user_employment.schoolid
+				    WHERE
+				        u_cdol_user_employment.usersdcid = :selectedUserDcid
+				        OR :selectedUserDcid = 0
+				),
+				total_data AS (
+				    SELECT
+				        SUM(emp_years) AS total_years,
+				        SUM(emp_months) AS total_months
+				    FROM
+				        emp_data
+				)
+				SELECT
+				    total_years + FLOOR(total_months / 12) AS total_years,
+				    MOD(total_months, 12) AS total_months
+				FROM
+				    total_data
 			]]>
-        </sql>
-    </query>
+		</sql>
+	</query>
 </queries>
