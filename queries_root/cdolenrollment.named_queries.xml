@@ -1,4 +1,35 @@
 <queries>
+	<query name="net.cdolinc.user.employment.certList" flattened="true">
+		<summary>CDOL: Certifcate Records</summary>
+		<description>List all Certifcate Records</description>
+		<args>
+			<arg name="selectedUserDcid" description="Passed in User Dcid" default="0"/>
+		</args>
+		<columns>
+			<column column="u_cdol_user_cert.id">id</column>
+			<column column="u_cdol_user_cert.usersdcid">usersdcid</column>
+			<column column="u_cdol_user_cert.cert_type">cert_type</column>
+			<column column="u_cdol_user_cert.cert_rank">cert_rank</column>
+			<column column="u_cdol_user_cert.cert_exp_date">cert_exp_date</column>
+			<column column="u_cdol_user_cert.notes">notes</column>
+		</columns>
+		<sql>
+			<![CDATA[
+				SELECT
+					u_cdol_user_cert.id,
+					u_cdol_user_cert.usersdcid,
+					u_cdol_user_cert.cert_type,
+					u_cdol_user_cert.cert_rank,
+					u_cdol_user_cert.cert_exp_date,
+					u_cdol_user_cert.notes
+				FROM
+					u_cdol_user_cert
+				WHERE
+					u_cdol_user_cert.usersdcid = :selectedUserDcid
+					OR :selectedUserDcid = 0
+			]]>
+		</sql>
+	</query>
 	<query name="net.cdolinc.user.employment.employmentList" flattened="true">
 		<summary>CDOL: Employment Records</summary>
 		<description>List all Employment Records</description>
