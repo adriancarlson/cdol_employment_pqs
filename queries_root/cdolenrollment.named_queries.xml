@@ -40,7 +40,8 @@
 			<column column="u_cdol_user_employment.id">id</column>
 			<column column="u_cdol_user_employment.usersdcid">usersdcid</column>
 			<column column="u_cdol_user_employment.schoolid">schoolid</column>
-			<column column="u_cdol_user_employment.school_name">school_name</column>
+			<column column="schools.name">school_name</column>
+			<column column="u_cdol_user_employment.school_name">emp_school_name</column>
 			<column column="u_cdol_user_employment.assignment">assignment</column>
 			<column column="u_cdol_user_employment.emp_start_date">emp_start_date</column>
 			<column column="u_cdol_user_employment.emp_end_date">emp_end_date</column>
@@ -54,11 +55,8 @@
 					u_cdol_user_employment.id,
 					u_cdol_user_employment.usersdcid,
 					u_cdol_user_employment.schoolid,
-					CASE
-						WHEN u_cdol_user_employment.schoolid = 0 THEN 'Diocean Office'
-						WHEN u_cdol_user_employment.schoolid = -1 THEN u_cdol_user_employment.school_name
-						ELSE schools.name
-					END AS schoolname,
+					schools.name as school_name,
+					u_cdol_user_employment.school_name as emp_school_name,
 					u_cdol_user_employment.assignment,
 					u_cdol_user_employment.emp_start_date,
 					u_cdol_user_employment.emp_end_date,
